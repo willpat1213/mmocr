@@ -74,6 +74,11 @@ test_pipeline = [
         color_type='color_ignore_orientation'),
     dict(type='Resize', scale=(1080, 736), keep_ratio=True),
     dict(
+        type='LoadOCRAnnotations',
+        with_polygon=True,
+        with_bbox=True,
+        with_label=True),
+    dict(
         type='PackTextDetInputs',
         meta_keys=('img_path', 'ori_shape', 'img_shape', 'scale_factor',
                    'instances'))

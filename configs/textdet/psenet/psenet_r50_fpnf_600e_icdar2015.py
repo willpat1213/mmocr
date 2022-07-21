@@ -47,9 +47,13 @@ test_pipeline_icdar2015 = [
         color_type='color_ignore_orientation'),
     dict(type='Resize', scale=(2240, 2240), keep_ratio=True),
     dict(
+        type='LoadOCRAnnotations',
+        with_polygon=True,
+        with_bbox=True,
+        with_label=True),
+    dict(
         type='PackTextDetInputs',
-        meta_keys=('img_path', 'ori_shape', 'img_shape', 'scale_factor',
-                   'instances'))
+        meta_keys=('img_path', 'ori_shape', 'img_shape', 'scale_factor'))
 ]
 
 train_dataloader = dict(
