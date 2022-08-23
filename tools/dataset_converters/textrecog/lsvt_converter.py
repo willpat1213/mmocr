@@ -6,6 +6,7 @@ import os.path as osp
 from functools import partial
 
 import mmcv
+import mmengine
 
 from mmocr.utils.fileio import list_to_file
 
@@ -114,14 +115,14 @@ def convert_lsvt(root_path,
         raise Exception(
             f'{annotation_path} not exists, please check and try again.')
 
-    annotation = mmcv.load(annotation_path)
+    annotation = mmengine.load(annotation_path)
     # outputs
     dst_label_file = osp.join(root_path, f'{split}_label.{format}')
     dst_image_root = osp.join(root_path, 'crops', split)
     ignore_image_root = osp.join(root_path, 'ignores', split)
     src_image_root = osp.join(root_path, 'imgs')
-    mmcv.mkdir_or_exist(dst_image_root)
-    mmcv.mkdir_or_exist(ignore_image_root)
+    mmengine.mkdir_or_exist(dst_image_root)
+    mmengine.mkdir_or_exist(ignore_image_root)
 
     process_img_with_path = partial(
         process_img,
@@ -162,7 +163,7 @@ def convert_lsvt(root_path,
         tasks.append((img_idx + img_start_idx, img_info, annotation[prefix]))
         idx = idx + 1
 
-    labels_list = mmcv.track_parallel_progress(
+    labels_list = mmengine.track_parallel_progress(
         process_img_with_path, tasks, keep_order=True, nproc=nproc)
     final_labels = []
     for label_list in labels_list:

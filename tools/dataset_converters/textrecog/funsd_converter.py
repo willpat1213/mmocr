@@ -6,6 +6,7 @@ import os
 import os.path as osp
 
 import mmcv
+import mmengine
 
 from mmocr.utils.fileio import list_to_file
 from mmocr.utils.img_utils import crop_img
@@ -52,10 +53,10 @@ def collect_annotations(files, nproc=1):
     assert isinstance(nproc, int)
 
     if nproc > 1:
-        images = mmcv.track_parallel_progress(
+        images = mmengine.track_parallel_progress(
             load_img_info, files, nproc=nproc)
     else:
-        images = mmcv.track_progress(load_img_info, files)
+        images = mmengine.track_progress(load_img_info, files)
 
     return images
 
@@ -102,7 +103,7 @@ def load_json_info(gt_file, img_info):
         img_info (dict): The dict of the img and annotation information
     """
 
-    annotation = mmcv.load(gt_file)
+    annotation = mmengine.load(gt_file)
     anno_info = []
     for form in annotation['form']:
         for ann in form['words']:
@@ -211,7 +212,8 @@ def main():
 
     for split in ['training', 'test']:
         print(f'Processing {split} set...')
-        with mmcv.Timer(print_tmpl='It takes {}s to convert FUNSD annotation'):
+        with mmengine.Timer(
+                print_tmpl='It takes {}s to convert FUNSD annotation'):
             files = collect_files(
                 osp.join(root_path, 'imgs'),
                 osp.join(root_path, 'annotations', split))

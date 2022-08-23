@@ -5,7 +5,7 @@ import os.path as osp
 from argparse import ArgumentParser
 from functools import partial
 
-import mmcv
+import mmengine
 from PIL import Image
 
 from mmocr.utils.fileio import list_to_file
@@ -67,7 +67,7 @@ def convert_openimages(root_path,
     dst_image_root = osp.join(root_path, dst_image_path)
     os.makedirs(dst_image_root, exist_ok=True)
 
-    annotation = mmcv.load(annotation_path)
+    annotation = mmengine.load(annotation_path)
 
     process_img_with_path = partial(
         process_img,
@@ -79,7 +79,7 @@ def convert_openimages(root_path,
         anns.setdefault(ann['image_id'], []).append(ann)
     for img_idx, img_info in enumerate(annotation['images']):
         tasks.append((img_idx + img_start_idx, img_info, anns[img_info['id']]))
-    labels_list = mmcv.track_parallel_progress(
+    labels_list = mmengine.track_parallel_progress(
         process_img_with_path, tasks, keep_order=True, nproc=nproc)
     final_labels = []
     for label_list in labels_list:
